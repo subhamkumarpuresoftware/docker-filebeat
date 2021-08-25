@@ -16,15 +16,15 @@ before_script:
 script:
   - echo "Build local image"
   - docker login -u subham328 -p Ak@sh328
-  - docker buildx build --platform linux/amd64,linux/arm64 -t subham328/file-beat:1.1 --push .
+  - docker buildx build --platform linux/amd64,linux/arm64 -t subham328/file-beat:1.2 --push .
   - docker images
   - echo "Run local image"
   - docker run -d --name filebeat filebeat
   - docker ps -a
   - docker logs filebeat
   - echo "Testing public image on Docker Hub"
-  - docker run -d --name nguoianphu-filebeat nguoianphu/docker-filebeat
+  - docker run -d --name filebeat subham328/file-beat:1.2
   - docker ps -a
-  - docker logs nguoianphu-filebeat  
+  - docker logs filebeat  
   - docker images
 
