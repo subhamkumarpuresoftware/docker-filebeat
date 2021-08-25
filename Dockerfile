@@ -20,14 +20,18 @@ RUN   apk update \
  &&   update-ca-certificates
 
 RUN if [ `uname -m` = "aarch64" ] ; then \
-        set -x \
+       arch="arm64"; \
+    else \
+       arch="x86_64"; \
+    fi \
+    && set -x \
         && apk add --update bash \
                             curl \
                             tar \
                                                 openssl \
-        && curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-${FILEBEAT_VERSION}-linux-arm64.tar.gz \
-        && tar xzvf filebeat-${FILEBEAT_VERSION}-linux-arm64.tar.gz -C / --strip-components=1 \
-        && rm -rf filebeat-${FILEBEAT_VERSION}-linux-arm64.tar.gz \
+        && curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-${FILEBEAT_VERSION}-linux-${arch}.tar.gz \
+        && tar xzvf filebeat-${FILEBEAT_VERSION}-linux-${arch}.tar.gz -C / --strip-components=1 \
+        && rm -rf filebeat-${FILEBEAT_VERSION}-linux-${arch}.tar.gz \
         && apk --no-cache add ca-certificates \
         && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
         && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk \
@@ -35,25 +39,7 @@ RUN if [ `uname -m` = "aarch64" ] ; then \
         && apk del curl \
                     tar \
                                 openssl \
-        && rm -rf /var/cache/apk/*; \
-    else  \
-        set -x \
-        && apk add --update bash \
-                            curl \
-                            tar \
-                                                openssl \
-        && curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-${FILEBEAT_VERSION}-linux-x86_64.tar.gz \
-        && tar xzvf filebeat-${FILEBEAT_VERSION}-linux-x86_64.tar.gz -C / --strip-components=1 \
-        && rm -rf filebeat-${FILEBEAT_VERSION}-linux-x86_64.tar.gz \
-        && apk --no-cache add ca-certificates \
-        && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-        && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk \
-        && apk add glibc-2.34-r0.apk \
-        && apk del curl \
-                    tar \
-                                openssl \
-        && rm -rf /var/cache/apk/* ;\
-    fi
+        && rm -rf /var/cache/apk/*
 ###############################################################################
 #                                   START
 ###############################################################################
@@ -64,4 +50,7 @@ RUN chmod +x docker-entrypoint.sh filebeat \
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD []
+
+
+
 
