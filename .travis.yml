@@ -15,8 +15,8 @@ before_script:
 
 script:
   - echo "Build local image"
-  - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-  - docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_USERNAME}/DOCKER-FILEBEAT:latest --push .
+  - docker login -u subham328 -p Ak@sh328
+  - docker buildx build --platform linux/amd64,linux/arm64 -t subham328/DOCKER-FILEBEAT:latest --push .
   - docker images
   - echo "Run local image"
   - docker run -d --name filebeat filebeat
